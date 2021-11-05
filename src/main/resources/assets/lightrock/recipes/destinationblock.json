@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "lightrock:destinationblock"
+  },
+  "pattern": [
+    "rrr",
+    " b "
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "b": {
+      "item": "lightrock:firstblock"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

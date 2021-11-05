@@ -1,0 +1,9 @@
+[{
+  "modid": "lightrock",
+  "name": "Teleporter Blocks",
+  "description": "Adds 2 new types of blocks: an arrival block and a destination block. Place the arrival block first and the destination block second, now you can teleport between these 2 blocks!",
+  "version": "1.0.0.0",
+  "mcversion": "1.12.2",
+  "logoFile": "assets/lightrock/textures/logo.png",
+  "authorList": ["Intercroc"]
+}]
