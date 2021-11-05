@@ -4,6 +4,7 @@ import com.darkemerald78.lightrock.LightRock;
 import com.google.gson.Gson;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
@@ -13,14 +14,15 @@ import scala.Int;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TeleportMap extends WorldSavedData implements Serializable {
-    private Map<Integer, FirstBlockTileEntity> firstBlockMap = new HashMap<>();
-    private Map<Integer, DestinationBlockTileEntity> destBlockMap = new HashMap<>();
-    private Map<FirstBlockTileEntity, DestinationBlockTileEntity> teleportMap = new HashMap<>();
+    private Map<Integer, FirstBlockTileEntity> firstBlockMap = new LinkedHashMap<>();
+    private Map<Integer, DestinationBlockTileEntity> destBlockMap = new LinkedHashMap<>();
+    private Map<FirstBlockTileEntity, DestinationBlockTileEntity> teleportMap = new LinkedHashMap<>();
 
     public TeleportMap() {
         super(LightRock.MODID+"_teleportMap");
@@ -57,6 +59,51 @@ public class TeleportMap extends WorldSavedData implements Serializable {
 
     public void updateFirstBlockMap(int i, FirstBlockTileEntity te) {
         firstBlockMap.put(i, te);
+        markDirty();
+    }
+
+    public Integer getIndexByValue(TileEntity te) {
+        Integer result = 0;
+
+        if(te == null) {
+            return result;
+        }
+
+        if(te instanceof FirstBlockTileEntity) {
+            for(int i : firstBlockMap.keySet()) {
+                if(firstBlockMap.get(i).equals(te)) {
+                    result = i;
+                }
+            }
+        } else if(te instanceof DestinationBlockTileEntity) {
+            for(int i : destBlockMap.keySet()) {
+                if(destBlockMap.get(i).equals(te)) {
+                    result = i;
+                }
+            }
+        }
+
+        return result;
+
+    }
+
+    public void deleteFirstBlockMapEntry(Integer i) {
+        firstBlockMap.entrySet().removeIf(e -> e.getKey().equals(i));
+        markDirty();
+    }
+
+    public void removeTeleportMapArrivalPoint(FirstBlockTileEntity te) {
+        teleportMap.keySet().removeIf(e -> e.equals(te));
+        markDirty();
+    }
+
+    public void deleteDestBlockMapEntry(Integer i) {
+        destBlockMap.entrySet().removeIf(e -> e.getKey().equals(i));
+        markDirty();
+    }
+
+    public void removeTeleportMapDestinationPoint(DestinationBlockTileEntity te) {
+        teleportMap.remove(te);
         markDirty();
     }
 

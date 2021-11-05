@@ -59,7 +59,7 @@ public class DestinationBlock extends Block implements ITileEntityProvider {
             //map.markDirty();
             for(Map.Entry<Integer, FirstBlockTileEntity> firstMap : map.getFirstBlockMap().entrySet()) {
                 for(Map.Entry<Integer, DestinationBlockTileEntity> destMap : map.getDestBlockMap().entrySet()) {
-                    if(firstMap.getKey() == destMap.getKey()) {
+                    if(firstMap.getKey().equals(destMap.getKey())) {
                         map.updateTeleportMap(firstMap.getValue(), destMap.getValue());
                         //map.markDirty();
                     }
@@ -69,13 +69,23 @@ public class DestinationBlock extends Block implements ITileEntityProvider {
 
     }
 
+    @Override
+    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
+        if(!worldIn.isRemote) {
+            TeleportMap map = TeleportMap.get(worldIn);
+            int index = map.getIndexByValue(getTE(worldIn, pos));
+            map.deleteDestBlockMapEntry(index);
+            map.removeTeleportMapDestinationPoint((getTE(worldIn, pos)));
+            getTE(worldIn, pos).setPosition(null);
+        }
+    }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(!world.isRemote) {
             TeleportMap tmap = TeleportMap.get(world);
             for(Map.Entry<FirstBlockTileEntity, DestinationBlockTileEntity> map : tmap.getTeleportMap().entrySet()) {
-                if(map.getValue().getPosition().equals(pos)) {
+                if(map.getValue().getPosition() != null && map.getValue().getPosition().equals(pos)) {
                     player.setPositionAndUpdate(map.getKey().getPosition().getX(), map.getKey().getPosition().getY()+1, map.getKey().getPosition().getZ());
                 }
             }

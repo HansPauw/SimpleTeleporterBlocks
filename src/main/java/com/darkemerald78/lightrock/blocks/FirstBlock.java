@@ -62,11 +62,21 @@ public class FirstBlock extends Block implements ITileEntityProvider {
     }
 
     @Override
+    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
+        if(!worldIn.isRemote) {
+            TeleportMap map = TeleportMap.get(worldIn);
+            int index = map.getIndexByValue(getTE(worldIn, pos));
+            map.deleteFirstBlockMapEntry(index);
+            map.removeTeleportMapArrivalPoint(getTE(worldIn, pos));
+        }
+    }
+
+    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState blockState, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(!world.isRemote) {
             TeleportMap tmap = TeleportMap.get(world);
             for(Map.Entry<FirstBlockTileEntity, DestinationBlockTileEntity> map : tmap.getTeleportMap().entrySet()) {
-                if(map.getKey().getPosition().equals(pos)) {
+                if(map.getKey().getPosition() != null && map.getKey().getPosition().equals(pos)) {
                     player.setPositionAndUpdate(map.getValue().getPosition().getX(), map.getValue().getPosition().getY()+1, map.getValue().getPosition().getZ());
                 }
             }
