@@ -8,44 +8,29 @@ import java.io.Serializable;
 
 public class DestinationBlockTileEntity extends TileEntity implements Serializable {
 
-    private BlockPos position;
 
-    private FirstBlock firstBlock;
+    private String tag;
 
-    public BlockPos getPosition() {
-        return position;
+    public String getTag() {
+        return tag;
     }
 
-    public void setPosition(BlockPos position) {
-        this.position = position;
-        markDirty();
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
-    public FirstBlock getFirstBlock() {
-        return firstBlock;
-    }
-
-    public void setFirstBlock(FirstBlock firstBlock) {
-        this.firstBlock = firstBlock;
-    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        int x = compound.getInteger("x");
-        int y = compound.getInteger("y");
-        int z = compound.getInteger("z");
-
-        position = new BlockPos(x, y, z);
+        tag = compound.getString("tag");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
 
-        compound.setInteger("x", position.getX());
-        compound.setInteger("y", position.getY());
-        compound.setInteger("z", position.getZ());
+        compound.setString("tag", tag);
 
         return compound;
     }

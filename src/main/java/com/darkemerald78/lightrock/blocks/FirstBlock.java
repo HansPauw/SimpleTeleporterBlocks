@@ -2,6 +2,7 @@ package com.darkemerald78.lightrock.blocks;
 
 import com.darkemerald78.lightrock.CommonProxy;
 import com.darkemerald78.lightrock.LightRock;
+import com.darkemerald78.lightrock.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -52,34 +53,26 @@ public class FirstBlock extends Block implements ITileEntityProvider {
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack itemStack) {
-        if(!world.isRemote) {
-            getTE(world, pos).setPosition(pos);
-            TeleportMap map = TeleportMap.get(world);
-            map.updateFirstBlockMap(map.getFirstBlockMap().size(), getTE(world, pos));
-            //map.markDirty();
-        }
+
 
     }
 
-    @Override
-    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-        if(!worldIn.isRemote) {
-            TeleportMap map = TeleportMap.get(worldIn);
-            int index = map.getIndexByValue(getTE(worldIn, pos));
-            map.deleteFirstBlockMapEntry(index);
-            map.removeTeleportMapArrivalPoint(getTE(worldIn, pos));
-        }
-    }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState blockState, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!world.isRemote) {
-            TeleportMap tmap = TeleportMap.get(world);
-            for(Map.Entry<FirstBlockTileEntity, DestinationBlockTileEntity> map : tmap.getTeleportMap().entrySet()) {
-                if(map.getKey().getPosition() != null && map.getKey().getPosition().equals(pos)) {
-                    player.setPositionAndUpdate(map.getValue().getPosition().getX(), map.getValue().getPosition().getY()+1, map.getValue().getPosition().getZ());
+        if(player.getHeldItemMainhand().getItem() == ModItems.wrenchItem) {
+            player.openGui(LightRock.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+        }
+
+        if(!world.isRemote && player.getHeldItemMainhand().getItem() != ModItems.wrenchItem) {
+            TeleportMap map = TeleportMap.get(world);
+
+                for(Map.Entry<String, BlockPos> dmap : map.getDestBlockMap().entrySet()) {
+                    if(getTE(world, pos).getTag().equals(dmap.getKey())) {
+                        BlockTeleporter.teleportToDimension(player, world.provider.getDimension(), dmap.getValue().getX(), dmap.getValue().getY(), dmap.getValue().getZ());
+                        return true;
+                    }
                 }
-            }
         }
 
         return true;

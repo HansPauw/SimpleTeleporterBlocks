@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: LightRock
-Implementation-Version: 1.0
+Implementation-Version: 1.1.0
 Specification-Vendor: examplemodsareus
 Specification-Title: examplemod
-Implementation-Timestamp: 2021-11-05T11:46:16+0100
+Implementation-Timestamp: 2021-11-06T20:15:34+0100
 Specification-Version: 1
 Implementation-Vendor: examplemodsareus
 
