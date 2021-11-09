@@ -7,6 +7,7 @@ import com.darkemerald78.lightrock.items.WrenchItem;
 import com.darkemerald78.lightrock.network.SetTagMessage;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.world.World;
@@ -57,6 +58,14 @@ public class CommonProxy {
             return Minecraft.getMinecraft().world;
         else
             return ctx.getServerHandler().player.world;
+    }
+
+    public EntityPlayer getPlayer(MessageContext ctx) {
+        if(ctx.side.isClient()) {
+            return Minecraft.getMinecraft().player;
+        } else {
+            return ctx.getServerHandler().player;
+        }
     }
 }
 

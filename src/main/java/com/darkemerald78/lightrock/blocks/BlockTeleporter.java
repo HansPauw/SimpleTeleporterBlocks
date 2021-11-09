@@ -35,24 +35,10 @@ public class BlockTeleporter extends Teleporter {
         entityIn.motionZ = 0.0f;
     }
 
-    public static void teleportToDimension(EntityPlayer player, int dimension, int x, int y, int z) {
-        int oldDimension = player.getEntityWorld().provider.getDimension();
-        EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player;
-        MinecraftServer server = player.getEntityWorld().getMinecraftServer();
-        WorldServer worldServer = server.getWorld(dimension);
-        player.addExperienceLevel(0);
+    public static void teleportToDimension(EntityPlayer player, int x, int y, int z) {
 
-        if (worldServer == null || worldServer.getMinecraftServer() == null){
-            throw new IllegalArgumentException("Dimension: "+dimension+" doesn't exist!");
-        }
-
-        worldServer.getMinecraftServer().getPlayerList().transferPlayerToDimension(entityPlayerMP, dimension, new BlockTeleporter(worldServer, x, y, z));
         player.setPositionAndUpdate(x, y+1, z);
-        if (oldDimension == 1) {
-            player.setPositionAndUpdate(x, y+1, z);
-            worldServer.spawnEntity(player);
-            worldServer.updateEntityWithOptionalForce(player, false);
-        }
+
     }
 
 }

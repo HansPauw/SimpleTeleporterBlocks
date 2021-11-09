@@ -69,7 +69,7 @@ public class FirstBlock extends Block implements ITileEntityProvider {
 
                 for(Map.Entry<String, BlockPos> dmap : map.getDestBlockMap().entrySet()) {
                     if(getTE(world, pos).getTag().equals(dmap.getKey())) {
-                        BlockTeleporter.teleportToDimension(player, world.provider.getDimension(), dmap.getValue().getX(), dmap.getValue().getY(), dmap.getValue().getZ());
+                        BlockTeleporter.teleportToDimension(player, dmap.getValue().getX(), dmap.getValue().getY(), dmap.getValue().getZ());
                         return true;
                     }
                 }

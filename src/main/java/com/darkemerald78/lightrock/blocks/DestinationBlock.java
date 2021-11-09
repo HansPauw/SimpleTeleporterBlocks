@@ -68,7 +68,7 @@ public class DestinationBlock extends Block implements ITileEntityProvider {
 
             for (Map.Entry<String, BlockPos> tmap : map.getFirstBlockMap().entrySet()) {
                     if (tmap.getKey().equals(getTE(world, pos).getTag())) {
-                        BlockTeleporter.teleportToDimension(player, world.provider.getDimension(), tmap.getValue().getX(), tmap.getValue().getY(), tmap.getValue().getZ());
+                        BlockTeleporter.teleportToDimension(player, tmap.getValue().getX(), tmap.getValue().getY(), tmap.getValue().getZ());
                         return true;
                     }
 

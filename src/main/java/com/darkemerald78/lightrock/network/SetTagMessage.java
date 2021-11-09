@@ -6,8 +6,11 @@ import com.darkemerald78.lightrock.blocks.FirstBlockTileEntity;
 import com.darkemerald78.lightrock.blocks.TeleportMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -68,8 +71,14 @@ public class SetTagMessage implements IMessage {
             TeleportMap tm = TeleportMap.get(w);
 
             if(te instanceof FirstBlockTileEntity) {
-                ((FirstBlockTileEntity) te).setTag(message.getTag());
-                tm.updateFirstBlockMap(message.getTag(), new BlockPos(message.getX(), message.getY(), message.getZ()));
+                if(!tm.getFirstBlockMap().containsKey(message.tag)) {
+                    ((FirstBlockTileEntity) te).setTag(message.getTag());
+                    tm.updateFirstBlockMap(message.getTag(), new BlockPos(message.getX(), message.getY(), message.getZ()));
+                } else {
+                    EntityPlayer player = LightRock.proxy.getPlayer(ctx);
+                    player.sendMessage(new TextComponentString(TextFormatting.RED + "Error: label "+message.getTag()+" is already in use for an arrival block!"));
+                }
+
             } else if(te instanceof DestinationBlockTileEntity) {
                 ((DestinationBlockTileEntity) te).setTag(message.getTag());
                 tm.updateDestBlockMap(message.getTag(), new BlockPos(message.getX(), message.getY(), message.getZ()));
