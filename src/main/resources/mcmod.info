@@ -2,7 +2,7 @@
   "modid": "lightrock",
   "name": "Teleporter Blocks",
   "description": "Adds 2 new types of blocks: an arrival block and a destination block. Also adds a new item, the telewrench! The telewrench allows you to label your teleporter blocks and teleport between blocks with the same label.",
-  "version": "1.1.0.0",
+  "version": "1.1.0.1",
   "mcversion": "1.12.2",
   "logoFile": "assets/lightrock/textures/logo.png",
   "authorList": ["Intercroc"]
