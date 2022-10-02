@@ -80,8 +80,13 @@ public class SetTagMessage implements IMessage {
                 }
 
             } else if(te instanceof DestinationBlockTileEntity) {
-                ((DestinationBlockTileEntity) te).setTag(message.getTag());
-                tm.updateDestBlockMap(message.getTag(), new BlockPos(message.getX(), message.getY(), message.getZ()));
+                if(!tm.getDestBlockMap().containsKey(message.tag)) {
+                    ((DestinationBlockTileEntity) te).setTag(message.getTag());
+                    tm.updateDestBlockMap(message.getTag(), new BlockPos(message.getX(), message.getY(), message.getZ()));
+                } else {
+                    EntityPlayer player = LightRock.proxy.getPlayer(ctx);
+                    player.sendMessage(new TextComponentString(TextFormatting.RED + "Error: label "+message.getTag()+" is already in use for a destination block!"));
+                }
             }
 
             return null;
